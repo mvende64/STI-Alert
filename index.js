@@ -1,15 +1,19 @@
-'use strict';
+def pastsexpartner():
+    form = PastSexualPartnerForm()
+    if form.validate_on_submit():
+        pastpartner = pastsexpartner(email=form.email.data,
+                            username=form.username.data,
+                            first_name=form.first_name.data,
+                            last_name=form.last_name.data,
+                            phonenumber=form.phonenumber.data)
 
-var fs = require('fs');
-var path = require('path');
+        # add employee to the database
+        db.session.add(pastpartner)
+        db.session.commit()
+        flash('You have successfully filled in parnter! You may now add another partner.')
 
-exports.get = function(event, context, callback) {
-  var contents = fs.readFileSync(`public${path.sep}index.html`);
-  var result = {
-    statusCode: 200,
-    body: contents.toString(),
-    headers: {'content-type': 'text/html'}
-  };
+        # redirect to the login page
+        return redirect(url_for('auth.login'))
 
-  callback(null, result);
-};
+    # load pastsexpartner template
+    return render_template('auth/pastsexpartner.html', form=form, title='pastsexpartner')
